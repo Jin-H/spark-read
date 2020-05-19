@@ -21,6 +21,7 @@ import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 
 /**
+ * 没太理解什么样子的数据才能叫做 chunk
  * Request to fetch a sequence of a single chunk of a stream. This will correspond to a single
  * {@link org.apache.spark.network.protocol.ResponseMessage} (either success or failure).
  */

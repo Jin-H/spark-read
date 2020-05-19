@@ -237,6 +237,7 @@ public class TransportClient implements Closeable {
     }
 
     // 随机生成一个rpc的请求id
+    // 如果requestId重复，造成callback的覆盖怎么办？看这个样子应该是直接忽略了这种小概率事件？
     long requestId = Math.abs(UUID.randomUUID().getLeastSignificantBits());
     // 将该rpc请求（rpc id）以及其对应的callback存储到TransportResponseHandler中，
     // 等到server端响应时，我们再用TransportResponseHandler去把对应的rpc请求的callback
