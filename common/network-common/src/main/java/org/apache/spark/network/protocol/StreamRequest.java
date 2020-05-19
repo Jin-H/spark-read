@@ -21,6 +21,7 @@ import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 
 /**
+ * 是为了提高大对象的传输效率，详见[SPARK-11235]
  * Request to stream data from the remote end.
  * <p>
  * The stream ID is an arbitrary string that needs to be negotiated between the two endpoints before
