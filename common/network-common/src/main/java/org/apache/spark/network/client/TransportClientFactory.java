@@ -147,9 +147,11 @@ public class TransportClientFactory implements Closeable {
       // ClientPool的size由spark.shuffle.io.numConnectionsPerPeer决定，默认为1个。
       // 也就是说，默认在两个主机之间，只能建立一个连接。
       connectionPool.putIfAbsent(unresolvedAddress, new ClientPool(numConnectionsPerPeer));
+      // 为什么要多做一次查询呢？这个没太理解
       clientPool = connectionPool.get(unresolvedAddress);
     }
 
+    // 随机选择一个 client 相当于做了负载均衡了
     int clientIndex = rand.nextInt(numConnectionsPerPeer);
     TransportClient cachedClient = clientPool.clients[clientIndex];
 

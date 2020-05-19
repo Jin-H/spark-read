@@ -95,6 +95,7 @@ public class OneForOneStreamManager extends StreamManager {
     state.curChunk += 1;
     // 所谓的chunk就是一整个buffer。在spark high level看来，该chunk又对应一个block。
     // 而我们从shuffle的整个流程可以看到，该block中又包含了连续的1或n个partition数据。
+    // 所以 chunk 就是 一个 block，那连续的1或n个partition是同一个stage中的嘛？
     ManagedBuffer nextChunk = state.buffers.next();
 
     if (!state.buffers.hasNext()) {

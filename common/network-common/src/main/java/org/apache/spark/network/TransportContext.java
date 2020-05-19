@@ -133,6 +133,7 @@ public class TransportContext {
   /**
    * 初始化client／server Netty Channel Pipeline用于编码／解码消息，并创建TransportChannelHandler
    * 用于处理request或response消息。
+   * 按照道理来说，这个encoder 和 decoder 不应该有顺序的么，为什么client/server都是调用这个的呢额？
    * Initializes a client or server Netty Channel Pipeline which encodes/decodes messages and
    * has a {@link org.apache.spark.network.server.TransportChannelHandler} to handle request or
    * response messages.

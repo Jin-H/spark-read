@@ -32,6 +32,11 @@ import static org.apache.spark.network.util.NettyUtils.getRemoteAddress;
 
 /**
  * 一个单独的传输层的通道处理器，用于分发请求消息给TransportRequestHandler和响应消息给TransportResponseHandler。
+ * request ->
+ *
+ * producer : Decoder -> IdleChannelHandler -> TransportChannelHandler.channelRead -> TransportRequestHandler.handle ->
+ *            RpcHandler.receive -> NettyRpcEnv.receive -> Dispatcher.postRemoteMessage -> Inbox.post -> messages.add
+ *      
  * The single Transport-level Channel handler which is used for delegating requests to the
  * {@link TransportRequestHandler} and responses to the {@link TransportResponseHandler}.
  *
@@ -115,6 +120,7 @@ public class TransportChannelHandler extends ChannelInboundHandlerAdapter {
 
   // 虽然不知道怎么回事(具体和netty的原理有关)，但是应该能确定从TransportClient#sendRpc#writeAndFlush
   // 中发送过来的RpcRequest会最先被该方法读取。
+  // 因为实现了 Netty 的 ChannelInboundHandler，所以会通过链式调用到 channelRead 方法，来处理消息
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object request) throws Exception {
     if (request instanceof RequestMessage) {

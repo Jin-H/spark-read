@@ -81,6 +81,7 @@ private[spark] trait RpcEndpoint {
 
   /**
    * invoke ？是用反射来处理的吗？
+   * 我觉得不是用反射来处理的，应该只是说如果处理消息时有异常，可以调用这个方法处理
    * Invoked when any exception is thrown during handling messages.
    */
   def onError(cause: Throwable): Unit = {
@@ -137,6 +138,7 @@ private[spark] trait RpcEndpoint {
 }
 
 /**
+ * 没太明白，如何在非volatile且未加锁的情况下保证内部的字段是可见的？
  * A trait that requires RpcEnv thread-safely sending messages to it.
  *
  * Thread-safety means processing of one message happens before processing of the next message by

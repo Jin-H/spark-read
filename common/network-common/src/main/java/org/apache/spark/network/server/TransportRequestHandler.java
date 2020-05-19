@@ -170,6 +170,8 @@ public class TransportRequestHandler extends MessageHandler<RequestMessage> {
     // 而在client端接收到ChunkFetchSuccess时，此时buf已经变成NioManagerBuffer。
     // 因为，在ChunkFetchSuccess发送之前的编码过程中，我们已经把FileSegmentManagedBuffer中的文件
     // 内容拷贝到channel中，详见MessageWithHeader#transferTo.
+    // 意思是数据传输的时候，都是在 channel 中的？
+    // 可能需要看一看 io 相关的东西
     respond(new ChunkFetchSuccess(req.streamChunkId, buf)).addListener(future -> {
       // 如果chunk发送成功，则要把正在被传输的chunk的个数需要减1
       streamManager.chunkSent(req.streamChunkId.streamId);

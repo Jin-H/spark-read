@@ -38,6 +38,7 @@ private[spark] case class RpcEndpointAddress(rpcAddress: RpcAddress, name: Strin
   }
 
   override val toString = if (rpcAddress != null) {
+    // name和host中间为什么要用@符号的呢？
       s"spark://$name@${rpcAddress.host}:${rpcAddress.port}"
     } else {
       s"spark-client://$name"

@@ -32,6 +32,8 @@ import org.apache.spark.util.ThreadUtils
 
 /**
  * A message dispatcher, responsible for routing RPC messages to the appropriate endpoint(s).
+ * 这里的 endpoint 指的是服务端还是客户端呢？
+ * 答：这里的 endpoint 指的是服务端，Dispatcher 就是用来路由消息到不同的邮箱的
  *
  * @param numUsableCores Number of CPU cores allocated to the process, for sizing the thread pool.
  *                       If 0, will consider the available CPUs on the host.
@@ -162,6 +164,7 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv, numUsableCores: Int) exte
       } else {
         data.inbox.post(message)
         // 在receivers添加该接收方，表明其有消息可以接受
+        // 这是为了 MessageLoop 处理此 Inbox 中的消息
         receivers.offer(data)
         // 一切正常的话，data = None，那么，(e) => p.tryFailure(e)函数对None能执行吗？
         // 答案是：不会。因为foreach函数只会选择isEmpty为false的元素执行其中的值函数，而None的isEmpty为true
@@ -222,11 +225,13 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv, numUsableCores: Int) exte
         while (true) {
           try {
             // receivers为阻塞队列，所以队列为空时，会阻塞
+            // 阻塞时发生了什么呢？这个还是要看看书呀
             val data = receivers.take()
             if (data == PoisonPill) {
               // Put PoisonPill back so that other MessageLoops can see it.
               // 233333，这两行代码是真的有意思
               // 当Dispatcher的stop()被调用时，PoisonPill就会被放入到receiver中，然后线程就一个个的终止了，最终整个线程池终止
+              // 因为 return 了，所以线程终止了。。。。。
               receivers.offer(PoisonPill)
               return
             }

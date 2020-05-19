@@ -223,6 +223,7 @@ public class TransportClient implements Closeable {
 
   /**
    * 用于发送一个不透明的消息给服务端的RpcHandler。callback函数会在（客户端接收到）服务端响应或错误后被调用。
+   * 为什么说这个消息是不透明的？什么样的消息是不透明的？什么样的消息是透明的？
    * Sends an opaque message to the RpcHandler on the server-side. The callback will be invoked
    * with the server's response or upon any failure.
    *
@@ -237,6 +238,7 @@ public class TransportClient implements Closeable {
     }
 
     // 随机生成一个rpc的请求id
+    // 如果requestId重复，造成callback的覆盖怎么办？看这个样子应该是直接忽略了这种小概率事件？
     long requestId = Math.abs(UUID.randomUUID().getLeastSignificantBits());
     // 将该rpc请求（rpc id）以及其对应的callback存储到TransportResponseHandler中，
     // 等到server端响应时，我们再用TransportResponseHandler去把对应的rpc请求的callback
