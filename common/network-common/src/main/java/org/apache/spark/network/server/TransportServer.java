@@ -89,6 +89,7 @@ public class TransportServer implements Closeable {
     IOMode ioMode = IOMode.valueOf(conf.ioMode());
     EventLoopGroup bossGroup =
       NettyUtils.createEventLoop(ioMode, conf.serverThreads(), conf.getModuleName() + "-server");
+    // 为啥两个 group 一样呢？有什么特殊意义嘛？
     EventLoopGroup workerGroup = bossGroup;
 
     PooledByteBufAllocator allocator = NettyUtils.createPooledByteBufAllocator(
