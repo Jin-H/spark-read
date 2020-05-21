@@ -32,6 +32,8 @@ import org.apache.spark.util.ThreadUtils
 
 /**
  * A message dispatcher, responsible for routing RPC messages to the appropriate endpoint(s).
+ * 这里的 endpoint 指的是服务端还是客户端呢？
+ * 答：这里的 endpoint 指的是服务端，Dispatcher 就是用来路由消息到不同的邮箱的
  *
  * @param numUsableCores Number of CPU cores allocated to the process, for sizing the thread pool.
  *                       If 0, will consider the available CPUs on the host.
