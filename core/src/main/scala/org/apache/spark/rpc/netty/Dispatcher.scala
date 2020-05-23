@@ -224,11 +224,13 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv, numUsableCores: Int) exte
         while (true) {
           try {
             // receivers为阻塞队列，所以队列为空时，会阻塞
+            // 阻塞时发生了什么呢？这个还是要看看书呀
             val data = receivers.take()
             if (data == PoisonPill) {
               // Put PoisonPill back so that other MessageLoops can see it.
               // 233333，这两行代码是真的有意思
               // 当Dispatcher的stop()被调用时，PoisonPill就会被放入到receiver中，然后线程就一个个的终止了，最终整个线程池终止
+              // 因为 return 了，所以线程终止了。。。。。
               receivers.offer(PoisonPill)
               return
             }
