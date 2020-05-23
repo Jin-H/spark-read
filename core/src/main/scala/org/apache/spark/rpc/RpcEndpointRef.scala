@@ -42,11 +42,13 @@ private[spark] abstract class RpcEndpointRef(conf: SparkConf)
   def name: String
 
   /**
+   * 其实就是 at-most-once ，因为并不记录发送状态，也不期望服务端回复
    * Sends a one-way asynchronous message. Fire-and-forget semantics.
    */
   def send(message: Any): Unit
 
   /**
+   * 这是 at-least-once
    * Send a message to the corresponding [[RpcEndpoint.receiveAndReply)]] and return a [[Future]] to
    * receive the reply within the specified timeout.
    *

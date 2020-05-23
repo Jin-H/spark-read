@@ -248,6 +248,7 @@ object SparkEnv extends Logging {
       }
     }
 
+    // 如果 SparkEnv 位于 Driver 中，名字就是 sparkDriver，如果 SparkEnv 位于 Executor 中，名字就是 sparkExecutor
     val systemName = if (isDriver) driverSystemName else executorSystemName
     // 创建rpcEnv
     val rpcEnv = RpcEnv.create(systemName, bindAddress, advertiseAddress, port.getOrElse(-1), conf,
