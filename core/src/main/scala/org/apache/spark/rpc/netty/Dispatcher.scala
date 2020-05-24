@@ -164,6 +164,7 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv, numUsableCores: Int) exte
       } else {
         data.inbox.post(message)
         // 在receivers添加该接收方，表明其有消息可以接受
+        // 这是为了 MessageLoop 处理此 Inbox 中的消息
         receivers.offer(data)
         // 一切正常的话，data = None，那么，(e) => p.tryFailure(e)函数对None能执行吗？
         // 答案是：不会。因为foreach函数只会选择isEmpty为false的元素执行其中的值函数，而None的isEmpty为true
