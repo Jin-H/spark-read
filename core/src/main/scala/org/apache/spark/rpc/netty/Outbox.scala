@@ -105,6 +105,8 @@ private[netty] class Outbox(nettyEnv: NettyRpcEnv, val address: RpcAddress) {
   private var stopped = false
 
   /**
+   * 用于表示队列是否耗尽，为什么不选择使用 volatile 而要使用 @GuardedBy 注解的呢？
+   * `@GuardedBy( "this" )` 表示受对象内部锁保护，其实隐含的原语就是修改这个字段线程安全？
    * If there is any thread draining the message queue
    */
   @GuardedBy("this")
