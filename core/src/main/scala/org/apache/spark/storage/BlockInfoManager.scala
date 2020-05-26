@@ -108,6 +108,7 @@ private[storage] object BlockInfo {
 }
 
 /**
+ * BlockManager 的组成部分，用于追踪元数据和管理block的锁资源
  * Component of the [[BlockManager]] which tracks metadata for blocks and manages block locking.
  *
  * The locking interface exposed by this class is readers-writer lock. Every lock acquisition is
@@ -118,6 +119,7 @@ private[storage] object BlockInfo {
  */
 private[storage] class BlockInfoManager extends Logging {
 
+  // 这是什么神奇的用法。。。。
   private type TaskAttemptId = Long
 
   /**
