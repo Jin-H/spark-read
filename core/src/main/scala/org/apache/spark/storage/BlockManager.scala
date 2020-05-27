@@ -113,6 +113,7 @@ private[spark] class ByteBufferBlockData(
  *
  * Note that [[initialize()]] must be called before the BlockManager is usable.
  * 其实为什么不在LiveListenerBus也加这样的说明呢：post必须在listener建立之后才能调用，而不让问题搞的更复杂：see[SPARK-22850]
+ * 看了一下 BlockManager 的方法调用，意思是 RDD 直接就和 BlockManager 交互了？
  */
 private[spark] class BlockManager(
     executorId: String,
@@ -967,6 +968,8 @@ private[spark] class BlockManager(
   /**
    * Put a new block of serialized bytes to the block manager.
    *
+   * 调用者不得更改或释放底层字节的数据缓冲区，如果这么做可能损坏或更改 BlockManager 存储的数据
+   * 这里的 data buffer 指的是 ChunkedByteBuffer 嘛？
    * '''Important!''' Callers must not mutate or release the data buffer underlying `bytes`. Doing
    * so may corrupt or change the data stored by the `BlockManager`.
    *
@@ -1030,6 +1033,7 @@ private[spark] class BlockManager(
           val values =
             serializerManager.dataDeserializeStream(blockId, bytes.toInputStream())(classTag)
           memoryStore.putIteratorAsValues(blockId, values, classTag) match {
+              // scala 中神奇的语法了，是 Either 的两个实现
             case Right(_) => true
             case Left(iter) =>
               // If putting deserialized values in memory failed, we will put the bytes directly to
