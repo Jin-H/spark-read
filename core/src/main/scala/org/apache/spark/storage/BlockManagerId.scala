@@ -27,6 +27,9 @@ import org.apache.spark.util.Utils
 /**
  * :: DeveloperApi ::
  * 该类代表了一个BlockManager的唯一标识
+ * 构造参数中的 executorId 是不是默认了只有 executor 才会有 BlockManager ？
+ * 不对，如果 broadcast 的话，那么 Driver 也是需要有 BlockManager 的，而且 executorId 也是可以为空的.
+ * 该类中还有 isDriver 方法来判断是否是 Driver.
  * This class represent an unique identifier for a BlockManager.
  *
  * The first 2 constructors of this class are made private to ensure that BlockManagerId objects
@@ -136,6 +139,7 @@ private[spark] object BlockManagerId {
     getCachedBlockManagerId(obj)
   }
   // 额...
+  // 如果 key 和 value 都是相同的，那么为什么不用 set 呢？
   val blockManagerIdCache = new ConcurrentHashMap[BlockManagerId, BlockManagerId]()
 
   def getCachedBlockManagerId(id: BlockManagerId): BlockManagerId = {

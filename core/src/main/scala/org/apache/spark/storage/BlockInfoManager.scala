@@ -120,6 +120,7 @@ private[storage] object BlockInfo {
 private[storage] class BlockInfoManager extends Logging {
 
   // 这是什么神奇的用法。。。。
+  // structural types
   private type TaskAttemptId = Long
 
   /**
@@ -248,6 +249,7 @@ private[storage] class BlockInfoManager extends Logging {
           }
       }
       if (blocking) {
+        // 此处 wait ，锁资源被释放，当前线程是挂起了，那么是否意味着不会进入下一行了呢？
         wait()
       }
     } while (blocking)
