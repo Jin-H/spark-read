@@ -105,6 +105,7 @@ private[memory] class StorageMemoryPool(
     enoughMemory
   }
 
+  // 没看懂啊，释放内存，就是直接减去size？
   def releaseMemory(size: Long): Unit = lock.synchronized {
     if (size > _memoryUsed) {
       logWarning(s"Attempted to release $size bytes of storage " +
