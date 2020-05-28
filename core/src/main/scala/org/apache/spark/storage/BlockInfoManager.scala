@@ -283,6 +283,10 @@ private[storage] class BlockInfoManager extends Logging {
   }
 
   /**
+   * allows us store a block and then immediately turn around and read it without having to
+   * worry about it having been evicted between the write and the read, which will allow us
+   * to significantly simplify `CacheManager` in the future (see #10748).
+   * 目的是防止写入之后就被驱除了。。
    * 将一个排他的写锁降级为一个读锁
    * Downgrades an exclusive write lock to a shared read lock.
    */
