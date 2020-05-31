@@ -89,6 +89,7 @@ private[netty] class NettyRpcEnv(
     "netty-rpc-connection",
     conf.getInt("spark.rpc.connect.threads", 64))
 
+  // server 用 volatile 来描述，是因为要让别的线程可以看到的嘛，为什么别的变量都不需要的呢？
   @volatile private var server: TransportServer = _
 
   private val stopped = new AtomicBoolean(false)
