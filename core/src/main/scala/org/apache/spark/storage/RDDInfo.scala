@@ -21,6 +21,7 @@ import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.rdd.{RDD, RDDOperationScope}
 import org.apache.spark.util.Utils
 
+// RDDInfo 用来做什么的呢？
 @DeveloperApi
 class RDDInfo(
     val id: Int,
@@ -47,6 +48,7 @@ class RDDInfo(
         bytesToString(memSize), bytesToString(diskSize))
   }
 
+  // RDD 也要排序的啊。。。
   override def compare(that: RDDInfo): Int = {
     this.id - that.id
   }
