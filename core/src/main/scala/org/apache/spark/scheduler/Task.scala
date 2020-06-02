@@ -33,6 +33,10 @@ import org.apache.spark.util._
  *  - [[org.apache.spark.scheduler.ShuffleMapTask]]
  *  - [[org.apache.spark.scheduler.ResultTask]]
  *
+ * spark job 由一个或者多个 stage 组成。
+ * job 中最后一个 stage 由多个 ResultTask 组成，其他的 stage 由多个 ShuffleMapTask 组成。
+ * ResultTask 执行 task 并且把 task 结果发送到 driver。
+ * ShuffleMapTask 执行 task 并且把 task 结果发送到多个 bucket(由 task 的分区器决定)。这里的 bucket 指的是什么呢？
  * A Spark job consists of one or more stages. The very last stage in a job consists of multiple
  * ResultTasks, while earlier stages consist of ShuffleMapTasks. A ResultTask executes the task
  * and sends the task output back to the driver application. A ShuffleMapTask executes the task
