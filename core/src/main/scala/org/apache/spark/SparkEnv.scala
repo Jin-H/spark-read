@@ -447,6 +447,7 @@ object SparkEnv extends Logging {
 
     // Spark properties
     // This includes the scheduling mode whether or not it is configured (used by SparkUI)
+    // 默认调度模式 FIFO schedulingModeConf = conf.get(SCHEDULER_MODE_PROPERTY, SchedulingMode.FIFO.toString)
     val schedulerMode =
       if (!conf.contains("spark.scheduler.mode")) {
         Seq(("spark.scheduler.mode", schedulingMode))
