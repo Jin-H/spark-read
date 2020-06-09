@@ -538,6 +538,7 @@ class SparkContext(config: SparkConf) extends Logging {
 
     // ------------------------ vvv _schedulerBackend _taskScheduler _dagScheduler vvv ---------------------------------
     // Create and start the scheduler
+    // 创建调度相关的信息
     val (sched, ts) = SparkContext.createTaskScheduler(this, master, deployMode)
     _schedulerBackend = sched
     _taskScheduler = ts
@@ -2782,6 +2783,9 @@ object SparkContext extends Logging {
     // When running locally, don't try to re-execute tasks on failure.
     val MAX_LOCAL_TASK_FAILURES = 1
 
+    // 通过master的url来判定调度在集群还是在本地
+    // local、local[N]、local[*]、local[N, maxRetries]、local[N, cores, memory] 时，时本地
+    // spark://(.*) 时是集群
     master match {
       case "local" =>
         val scheduler = new TaskSchedulerImpl(sc, MAX_LOCAL_TASK_FAILURES, isLocal = true)
@@ -2838,6 +2842,7 @@ object SparkContext extends Logging {
         }
         (backend, scheduler)
 
+        // 这种情况是用于扩展的情况
       case masterUrl =>
         val cm = getClusterManager(masterUrl) match {
           case Some(clusterMgr) => clusterMgr
