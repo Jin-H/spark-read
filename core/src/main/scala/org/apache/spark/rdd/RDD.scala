@@ -169,6 +169,7 @@ abstract class RDD[T: ClassTag](
    */
   private def persist(newLevel: StorageLevel, allowOverride: Boolean): this.type = {
     // TODO: Handle changes of StorageLevel
+    // 当前存储级别不为空(意味着已经被指定过了)，并且两个不想等，然后不允许覆盖，那么就抛异常了呀
     if (storageLevel != StorageLevel.NONE && newLevel != storageLevel && !allowOverride) {
       throw new UnsupportedOperationException(
         "Cannot change storage level of an RDD after it was already assigned a level")
@@ -176,6 +177,7 @@ abstract class RDD[T: ClassTag](
     // 所以，即使之后unpersist,也不能再persist咯???
     // If this is the first time this RDD is marked for persisting, register it
     // with the SparkContext for cleanups and accounting. Do this only once.
+    // 意思只有首次才会进行cleaner 操作？再次 persist 的时候，不会直接把原来的删掉重新缓存了，只会改变级别。。。
     if (storageLevel == StorageLevel.NONE) {
       // TODO read SparkContext Cleaner
       sc.cleaner.foreach(_.registerRDDForCleanup(this))
@@ -191,6 +193,7 @@ abstract class RDD[T: ClassTag](
    * have a storage level set yet. Local checkpointing is an exception.
    */
   def persist(newLevel: StorageLevel): this.type = {
+    // local 的 checkpoint 允许使用`newLevel` 来覆盖之前的 StorageLevel，集群的则默认不允许
     if (isLocallyCheckpointed) {
       // This means the user previously called localCheckpoint(), which should have already
       // marked this RDD for persisting. Here we should override the old storage level with
