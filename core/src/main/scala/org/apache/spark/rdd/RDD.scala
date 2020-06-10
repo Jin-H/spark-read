@@ -73,6 +73,7 @@ import org.apache.spark.util.random.{BernoulliCellSampler, BernoulliSampler, Poi
  * reading data from a new storage system) by overriding these functions. Please refer to the
  * <a href="http://people.csail.mit.edu/matei/papers/2012/nsdi_spark.pdf">Spark paper</a>
  * for more details on RDD internals.
+ * 其实挺想知道，为啥一个类中有些字段不做序列化处理，反序列化后，这些数据还能找得到嘛？
  */
 abstract class RDD[T: ClassTag](
     @transient private var _sc: SparkContext,
@@ -155,6 +156,7 @@ abstract class RDD[T: ClassTag](
   /** A friendly name for this RDD */
   @transient var name: String = _
 
+  // rdd 要名字用来干啥的呀
   /** Assign a name to this RDD */
   def setName(_name: String): this.type = {
     name = _name
@@ -216,6 +218,7 @@ abstract class RDD[T: ClassTag](
 
   /**
    * Mark the RDD as non-persistent, and remove all blocks for it from memory and disk.
+    * unpersist 为什么默认要等待所有的都删除在返回的呢？有这个必要的嘛
    *
    * @param blocking Whether to block until all blocks are deleted.
    * @return This RDD.
