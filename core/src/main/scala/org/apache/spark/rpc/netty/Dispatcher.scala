@@ -146,6 +146,16 @@ private[netty] class Dispatcher(nettyEnv: NettyRpcEnv, numUsableCores: Int) exte
 
   /**
    * Posts a message to a specific endpoint.
+   * // Unit 类型自身的特点，在赋值的时候，可以把任意类型的表达式赋值给他
+   * ```
+   * val tmp:Unit = "Hello"
+   *
+   * // 会被翻译为：{"Hello",()}同理，下文的问题可以这么理解了
+   * (e) => p.tryFailure(e) 被翻译为：(e) => {p.tryFailure(e);()}
+   * (e) => throw e 被翻译为：(e) => {throw e; ()}
+   *
+   *
+   * ```
    *
    * @param endpointName name of the endpoint.
    * @param message the message to post
