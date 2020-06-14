@@ -1014,6 +1014,7 @@ class DAGScheduler(
       // HadoopRDD whose underlying HDFS files have been deleted.
       // 从finalRDD开始，倒着向前，构建出第一个Stage（从Job执行的角
       // 度看是最后一个运行的stage，所以必定为ResultStage）
+      // [SPARK-9144] 取消了判断是否是本地运行，取消了`spark.localExecution.enabled` 配置项
       finalStage = createResultStage(finalRDD, func, partitions, jobId, callSite)
     } catch {
       case e: Exception =>
