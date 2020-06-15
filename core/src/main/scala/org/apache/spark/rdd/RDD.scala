@@ -157,6 +157,7 @@ abstract class RDD[T: ClassTag](
   @transient var name: String = _
 
   // rdd 要名字用来干啥的呀
+  // this.type 这个用法要看一看 hongjiang 的博客
   /** Assign a name to this RDD */
   def setName(_name: String): this.type = {
     name = _name
